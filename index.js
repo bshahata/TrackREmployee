@@ -1,10 +1,7 @@
-//importing our modules
-const mysql = require('mysql2');
+const mysql = require('mysql');
 const { printTable } = require('console-table-printer');
 const inquirer = require ('inquirer');
-//using dotenv to hide our password 
 require('dotenv').config();
-//setting up our mysql connection
 const connection = mysql.createConnection({
   host: 'localhost',
   user: process.env.DB_USER,
@@ -12,33 +9,22 @@ const connection = mysql.createConnection({
   database: process.env.DB_NAME
 });
 
-//main menu function
 function mainMenu() {
-  //starting up inquirer
   inquirer
-  //prompting a question
     .prompt([
       {
-        //the main menu
         type: "list",
         message: "welcome to the companies content management system, please make a choice from the options below.",
         choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "remove a department", "remove a role", "remove an employee", "update an employee role"],
         name: "options"
       },
-      //extracting the chosen answer
     ]).then((answer) => {
-      //switch case statement for the answers
       switch (answer.options) {
         case "view all departments":
-          //querying the connected database
           connection.query(
-            //returns all departments
             'SELECT * FROM `departments`', function (err, results) {
-              //console logs a line break for space
               console.log("\n")
-              //prints the departments
               printTable(results); 
-              //returns to main menu upon display of the departments
               mainMenu();
             }
           );
@@ -46,7 +32,6 @@ function mainMenu() {
           return
 
         case "view all roles":
-          //returns all role's
           connection.query('SELECT * FROM roles', function (err, results) {
             console.log("\n")
             printTable(results);
@@ -55,7 +40,6 @@ function mainMenu() {
           return;
 
         case "view all employees":
-          //returns all employees
           connection.query('SELECT * FROM employees', function (err, results) {
             console.log("\n")
             printTable(results);
@@ -64,32 +48,26 @@ function mainMenu() {
           return;
 
         case "add a department":
-          //starts the add department function
           addDepartment();
           return;
 
         case "add a role":
-          //starts the add role function
           addRole();
           return;
 
         case "add an employee":
-          //starts the add employee function
           addEmployee();
           return;
 
           case "remove a department":
-          //starts the delete department function
           deleteDepartments();
           return;
 
           case "remove a role":
-          //starts the delete role function
           deleteRole();
           return;
 
           case "remove an employee":
-          //starts the delete employee function
           deleteEmployee();
           return;
 
@@ -302,7 +280,7 @@ function deleteEmployee() {
           }
         );
       });
-  });
+  })
 };
 
 function updateRole() {
